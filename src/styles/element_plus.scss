@@ -1,0 +1,26 @@
+@import './variables';
+
+.el-input__inner {
+	border-radius: 4px;
+	height: 36px;
+}
+.el-button {
+	padding: 0 12px;
+	border-radius: 4px;
+	//background: #2e8de6;
+	border-radius: 4px;
+	//color: #ffffff;
+	font-size: 14px;
+	&:hover {
+		//background-color: #57acf2;
+		//color: #fff;
+	}
+	&:focus {
+		//background: #2e8de6;
+		//color: #ffffff;
+	}
+	&:active {
+		//background: #1879d4;
+		//color: #ffffff;
+	}
+}

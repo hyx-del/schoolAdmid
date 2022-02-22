@@ -1,0 +1,338 @@
+<!--
+ * @Author: 郑晶
+ * @Date: 2021-10-13 14:05:47
+ * @LastEditors: 刘帝君
+ * @LastEditTime: 2021-12-14 11:30:19
+ * @Descripttion: 学员管理-学员详情-基本信息
+-->
+<template>
+  <emptyBox bottom="50">
+    <formList
+      :config="{ ...addFormConfig, allDisabled: Boolean(isDetails == '1') }"
+      :itemList="itemList"
+      :formInitData="formInitData"
+      @buttonClick="button"
+    />
+  </emptyBox>
+</template>
+
+<script>
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import {
+  genderList,
+  studentStatusList,
+  degreesList,
+  practiceBaseList,
+  studyIntentionList
+} from "@/utils/enum/select";
+import { studentDetail, studentEdit } from "@/api/school";
+import formList from "@/components/FormList/index.vue";
+import store from "@/store";
+import emptyBox from "@/components/emptyBox";
+export default defineComponent({
+  components: {
+    formList,
+    emptyBox
+  },
+  name: "basicInfo",
+  props: {
+    formInitData: {
+      type: Object,
+      defalt: ""
+    }
+  },
+  setup(props) {
+    const router = useRouter();
+    const state = reactive({
+      //选项卡默认
+      activeName: "first",
+      isDetails: useRoute().query.isDetails,
+      // 按钮权限
+      btnPermissions: store.getters.studentsPermissions,
+      formInitData: props.formInitData,
+      itemList: [
+        {
+          code: "name",
+          maxlength: 60,
+          label: "姓名",
+          required: false
+        },
+        {
+          code: "englishName",
+          required: false,
+          maxlength: 60,
+          label: "英文名",
+          placeholder: " "
+        },
+        {
+          code: "mobile",
+          type: "phone",
+          maxlength: 11,
+          label: "电话",
+          disabled: true,
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "wechatId",
+          maxlength: 60,
+          label: "微信号",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "email",
+          maxlength: 60,
+          label: "邮箱",
+          required: false,
+          placeholder: " "
+        },
+        {
+          el: "radio",
+          code: "gender",
+          label: "性别",
+          required: false,
+          list: genderList
+        },
+        {
+          el: "img",
+          code: "avatar",
+          label: "头像",
+          size: 2048,
+          limit: 1,
+          required: false
+        },
+        {
+          el: "area",
+          code: "mergerRegion",
+          label: "地址",
+          areaCode: "province,provinceId,city,cityId,area,areaId",
+          required: false,
+          placeholder: " "
+        },
+        {
+          el: "select",
+          code: "status",
+          label: "状态",
+          list: studentStatusList,
+          required: false,
+          placeholder: " "
+        },
+        {
+          el: "select",
+          code: "degree",
+          label: "注册等级",
+          list: degreesList,
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "sourceNames",
+          label: "来源渠道",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "genre",
+          label: "注册派别",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "salesmanName",
+          label: "销售",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "studyGoalNames",
+          label: "学习目的",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "consultSchoolNames",
+          label: "咨询校区",
+          required: false,
+          placeholder: " "
+        },
+        {
+          el: "select",
+          code: "practiceBaseStatus",
+          label: "练习基础",
+          list: practiceBaseList,
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "consultCourseNames",
+          label: "咨询课程",
+          required: false,
+          placeholder: " "
+        },
+        {
+          el: "select",
+          code: "studyIntentionStatus",
+          label: "学习意向",
+          list: studyIntentionList,
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "studentPositionNames",
+          label: "学员身份",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "resourceTypeName",
+          label: "资源类型",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "resourceStatus",
+          maxlength: 60,
+          label: "资源状态",
+          required: false,
+          disabled: true,
+          placeholder: " "
+        },
+        {
+          code: "followTime",
+          maxlength: 60,
+          label: "跟进时间",
+          required: false,
+          disabled: true,
+          placeholder: " "
+        },
+        {
+          code: "operatorName",
+          maxlength: 60,
+          label: "注册人",
+          required: false,
+          disabled: true,
+          placeholder: " "
+        },
+        {
+          code: "distributeStatus",
+          maxlength: 60,
+          label: "分配状态",
+          required: false,
+          disabled: true,
+          placeholder: " "
+        },
+        {
+          code: "expectedStartTime",
+          maxlength: 60,
+          label: "意向开始时间",
+          required: false,
+          disabled: true,
+          placeholder: " "
+        },
+        {
+          code: "company",
+          maxlength: 60,
+          label: "工作单位",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "weights",
+          maxlength: 60,
+          lessCode: 1,
+          type: "number",
+          label: "权重",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "introduction",
+          el: "textArea",
+          maxlength: 255,
+          label: "描述",
+          required: false,
+          placeholder: " "
+        },
+        {
+          code: "remark",
+          el: "textArea",
+          maxlength: 255,
+          label: "备注",
+          required: false,
+          placeholder: " "
+        }
+      ]
+    });
+    // // 页面载入后
+    // onMounted(() => {
+    //   const id = useRoute().query.id;
+    //   // 回显
+    //   id &&
+    //     studentDetail({ id }).then(({ code, data }) => {
+    //       if (code == 200) {
+    //         console.log("这是详情");
+    //         // 格式化地址
+    //         // data.mergerRegion = data.mergerRegion
+    //         //   .split(",")
+    //         //   .map(val => Number(val));
+    //         data.genreNew = JSON.stringify(JSON.parse(data.genreNew));
+    //         state.formInitData = data;
+    //       }
+    //     });
+    // });
+    const button = val => {
+      switch (val.text) {
+        case "确认":
+          studentEdit(val.value).then(({ code }) => {
+            ElMessage({
+              message: `操作${code === 200 ? "成功" : "失败"}`,
+              duration: 1000,
+              type: "success",
+              onClose: () => code === 200 && router.back()
+            });
+          });
+          break;
+        case "取消":
+          router.back();
+          break;
+        default:
+          break;
+      }
+    };
+    const addFormConfig = {
+      inline: false, //行内
+      allRequired: true, // 是否全部必填
+      colon: "：",
+      inputStyle: {
+        width: "360px"
+      },
+      buttons:
+        useRoute().query.isDetails === "2"
+          ? [
+              {
+                funType: "cancel",
+                type: null,
+                name: "取消",
+                size: "small"
+              },
+              {
+                funType: "confirm",
+                type: "primary",
+                name: "确认",
+                size: "small",
+                perCode: "s0601d"
+              }
+            ]
+          : []
+    };
+    return {
+      ...toRefs(state),
+      addFormConfig,
+      button
+    };
+  }
+});
+</script>

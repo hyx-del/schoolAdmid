@@ -1,0 +1,67 @@
+.tips{
+  line-height: 1;
+  font-size: 12px;
+  color: #999;
+}
+
+.formLine{
+  width: 100%;
+  border-bottom: 1px solid #eee;
+}
+i{
+  font-style: normal;
+}
+.myFormList{
+  & >>> .el-cascader {
+    .el-input{
+      width: 100%;
+    }
+  }
+
+}
+.formListItem{
+  position: relative;
+  .formCheck{
+    position: absolute;
+    left: 0;
+    top: 12px;
+  }
+}
+.el-form-item{
+  position: relative;
+}
+
+.editer{
+  position: relative;
+  z-index: 5;
+}
+.formListTag{
+  margin-right: 10px;
+}
+.formListArea{
+  width: 100%;
+  >>> .el-input{
+    width: 100%;
+  }
+}
+.myFormList{
+  /deep/ .el-input-group__append{
+    cursor: pointer;
+    user-select: none;
+  }
+  /deep/ .el-select{
+    width: 100%;
+  }
+}
+.popButtom{
+  >>> .el-form-item__content{
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-left: 0 !important;
+  }
+}
